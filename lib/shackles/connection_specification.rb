@@ -19,6 +19,11 @@ module Shackles
 
     def self.included(klass)
       klass.send(:remove_method, :config)
+      klass.alias_method_chain :initialize, :deep_symbolize
+    end
+
+    def initialize_with_deep_symbolize(config, adapter_method)
+      initialize_without_deep_symbolize(config.deep_symbolize_keys, adapter_method)
     end
 
     def config
@@ -29,7 +34,12 @@ module Shackles
       @current_config_sequence = Shackles.global_config_sequence
       config = @config.dup
       if @config.has_key?(Shackles.environment)
-        config.merge!(@config[Shackles.environment].symbolize_keys)
+        env_config = @config[Shackles.environment]
+        # an array of databases for this environment; for now, just choose the first non-nil element
+        if env_config.is_a?(Array)
+          env_config = env_config.detect { |individual_config| !individual_config.nil? }
+        end
+        config.merge!(env_config.symbolize_keys)
       end
 
       config.keys.each do |key|
