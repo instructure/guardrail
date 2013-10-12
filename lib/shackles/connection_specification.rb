@@ -1,3 +1,5 @@
+require 'i18n/core_ext/hash' unless Hash.method_defined?(:deep_symbolize_keys)
+
 module Shackles
   module ConnectionSpecification
     class CacheCoherentHash < Hash
