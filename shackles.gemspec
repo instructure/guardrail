@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/instructure/shackles"
   s.summary     = "ActiveRecord database environment switching for slaves and least-privilege"
   s.description = "Allows multiple environments in database.yml, and dynamically switching them."
+  s.license     = "MIT"
 
   s.files = Dir["lib/**/*"] + ["LICENSE", "README.md"]
   s.test_files = Dir["spec/**/*"]
