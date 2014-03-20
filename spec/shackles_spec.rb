@@ -10,6 +10,10 @@ RSpec.configure do |config|
 end
 
 describe Shackles do
+  ConnectionSpecification = Rails.version < '4' ?
+      ActiveRecord::Base::ConnectionSpecification :
+      ActiveRecord::ConnectionAdapters::ConnectionSpecification
+
   it "should allow changing environments" do
     conf = {
         :adapter => 'postgresql',
@@ -22,7 +26,7 @@ describe Shackles do
             :database => 'slave'
         }
     }
-    spec = ActiveRecord::Base::ConnectionSpecification.new(conf, 'adapter')
+    spec = ConnectionSpecification.new(conf, 'adapter')
     spec.config[:username].should == 'canvas'
     spec.config[:database].should == 'master'
     Shackles.activate(:deploy) do
@@ -49,7 +53,7 @@ describe Shackles do
             :username => 'deploy'
         }
     }
-    spec = ActiveRecord::Base::ConnectionSpecification.new(conf, 'adapter')
+    spec = ConnectionSpecification.new(conf, 'adapter')
     spec.config[:username].should == 'canvas'
     Shackles.activate(:deploy) do
       spec.config[:username].should == 'deploy'
@@ -67,7 +71,7 @@ describe Shackles do
             :username => 'deploy'
         }
     }
-    spec = ActiveRecord::Base::ConnectionSpecification.new(conf.dup, 'adapter')
+    spec = ConnectionSpecification.new(conf.dup, 'adapter')
     spec.config[:username].should == 'canvas'
     spec.config[:schema_search_path] = 'bob'
     spec.config[:username].should == 'bob'
