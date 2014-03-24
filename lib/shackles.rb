@@ -14,7 +14,11 @@ module Shackles
       require 'shackles/connection_specification'
 
       ActiveRecord::ConnectionAdapters::ConnectionHandler.send(:include, Shackles::ConnectionHandler)
-      ActiveRecord::Base::ConnectionSpecification.send(:include, Shackles::ConnectionSpecification)
+      if defined?(ActiveRecord::Base::ConnectionSpecification)
+        ActiveRecord::Base::ConnectionSpecification.send(:include, Shackles::ConnectionSpecification)
+      elsif defined?(ActiveRecord::ConnectionAdapters::ConnectionSpecification) # moved in AR 4
+        ActiveRecord::ConnectionAdapters::ConnectionSpecification.send(:include, Shackles::ConnectionSpecification)
+      end
     end
 
     def global_config_sequence
