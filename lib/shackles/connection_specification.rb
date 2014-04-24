@@ -9,13 +9,19 @@ module Shackles
       end
 
       def []=(key, value)
+        super
         @spec.instance_variable_set(:@current_config, nil)
         @spec.instance_variable_get(:@config)[key] = value
       end
 
       def delete(key)
+        super
         @spec.instance_variable_set(:@current_config, nil)
         @spec.instance_variable_get(:@config).delete(key)
+      end
+
+      def dup
+        Hash[self]
       end
     end
 
