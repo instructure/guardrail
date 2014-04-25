@@ -74,11 +74,15 @@ describe Shackles do
     spec = ConnectionSpecification.new(conf.dup, 'adapter')
     spec.config[:username].should == 'canvas'
     spec.config[:schema_search_path] = 'bob'
+    spec.config[:schema_search_path].should == 'bob'
     spec.config[:username].should == 'bob'
     Shackles.activate(:deploy) do
       spec.config[:schema_search_path].should == 'bob'
       spec.config[:username].should == 'deploy'
     end
+    external_config = spec.config.dup
+    external_config.class.should == Hash
+    external_config.should == spec.config
 
     spec.config = conf.dup
     spec.config[:username].should == 'canvas'
