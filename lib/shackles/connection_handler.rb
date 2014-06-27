@@ -9,7 +9,7 @@ module Shackles
             ::Shackles.connection_handlers.values.each(&:#{method}_without_multiple_environments!)
           end
 EOS
-        klass.alias_method_chain "#{method}!".to_sym, :multiple_environments
+        klass.alias_method_chain "#{method}!".to_sym, :multiple_environments unless klass.instance_methods.include?("#{method}_without_multiple_environments!".to_sym)
       end
     end
   end
