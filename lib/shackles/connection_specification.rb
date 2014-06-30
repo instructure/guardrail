@@ -26,8 +26,8 @@ module Shackles
     end
 
     def self.included(klass)
-      klass.send(:remove_method, :config) if klass.instance_method(:config).owner == klass
-      klass.alias_method_chain :initialize, :deep_symbolize unless klass.private_instance_methods.include?(:initialize_without_deep_symbolize)
+      klass.send(:remove_method, :config)
+      klass.alias_method_chain :initialize, :deep_symbolize
     end
 
     def initialize_with_deep_symbolize(config, adapter_method)
