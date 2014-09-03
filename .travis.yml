@@ -1,0 +1,12 @@
+language: ruby
+
+rvm:
+  - "1.9.3"
+  - "2.1.2"
+
+env:
+  - RAILS=3
+  - RAILS=4.0
+  - RAILS=4.1
+
+script: bundle exec rspec spec
