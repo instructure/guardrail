@@ -1,3 +1,5 @@
+require 'set'
+
 module Shackles
   class << self
     def environment
@@ -8,10 +10,16 @@ module Shackles
       @global_config ||= {}
     end
 
+    def activated_environments
+      @activated_environments ||= Set.new()
+    end
+
     # semi-private
     def initialize!
       require 'shackles/connection_handler'
       require 'shackles/connection_specification'
+
+      activated_environments << Shackles.environment
 
       ActiveRecord::ConnectionAdapters::ConnectionHandler.send(:include, ConnectionHandler)
       klass = Rails.version < '4' ? ActiveRecord::Base : ActiveRecord::ConnectionAdapters
@@ -52,6 +60,7 @@ module Shackles
       return yield if environment == self.environment
       begin
         old_environment = activate!(environment)
+        activated_environments << environment
         yield
       ensure
         @environment = old_environment

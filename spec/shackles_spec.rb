@@ -112,6 +112,13 @@ describe Shackles do
       ActiveRecord::Base.connection.should == conn
     end
 
+    it "should track all activated environments" do
+      Shackles.activate(:slave) {}
+      Shackles.activate(:custom) {}
+      expected = Set.new([:master, :slave, :custom])
+      (Shackles.activated_environments & expected).should == expected
+    end
+
     context "non-transactional" do
       it "should really disconnect all envs" do
         ActiveRecord::Base.connection
