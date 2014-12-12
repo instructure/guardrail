@@ -49,3 +49,27 @@ if ENV['RAILS_DATABASE_USER']
   Shackles.apply_config!(:username => ENV['RAILS_DATABASE_USER'])
 end
 ```
+
+Additionally **in Ruby 2.0+** you can include Shackles::HelperMethods and use several helpers
+to execute methods on specific environments:
+
+```ruby
+class SomeModel
+  include Shackles::HelperMethods
+
+  def expensive_read_only
+    ...
+  end
+  shackle_method :expensive_read_only, environment: :slave
+
+  def self.class_level_expensive_read_only
+    ...
+  end
+  shackle_class_method :class_level_expensive_read_only, environment: :slave
+
+  # helpers for multiple methods are also available
+
+  shackle_methods :instance_method_foo, :instance_method_bar, environment: :slave
+  shackle_class_methods :class_method_foo, :class_method_bar, environment: :slave
+end
+```

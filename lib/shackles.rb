@@ -18,6 +18,7 @@ module Shackles
     def initialize!
       require 'shackles/connection_handler'
       require 'shackles/connection_specification'
+      require 'shackles/helper_methods'
 
       activated_environments << Shackles.environment
 
