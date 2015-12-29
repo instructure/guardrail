@@ -26,8 +26,8 @@ module Shackles
 
       # in rails 4.2, active support tries to create a copy of the original object's class
       # instead of making a new Hash object, so it fails since initialize expects an argument
-      def symbolize_keys
-        dup.symbolize_keys
+      def transform_keys(&block)
+        dup.transform_keys(&block)
       end
     end
 
