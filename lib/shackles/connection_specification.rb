@@ -31,13 +31,8 @@ module Shackles
       end
     end
 
-    def self.included(klass)
-      klass.send(:remove_method, :config)
-      klass.alias_method_chain :initialize, :deep_symbolize
-    end
-
-    def initialize_with_deep_symbolize(config, adapter_method)
-      initialize_without_deep_symbolize(config.deep_symbolize_keys, adapter_method)
+    def initialize(config, adapter_method)
+      super(config.deep_symbolize_keys, adapter_method)
     end
 
     def config

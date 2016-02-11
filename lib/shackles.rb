@@ -22,9 +22,8 @@ module Shackles
 
       activated_environments << Shackles.environment
 
-      ActiveRecord::ConnectionAdapters::ConnectionHandler.send(:include, ConnectionHandler)
-      klass = Rails.version < '4' ? ActiveRecord::Base : ActiveRecord::ConnectionAdapters
-      klass::ConnectionSpecification.send(:include, ConnectionSpecification)
+      ActiveRecord::ConnectionAdapters::ConnectionHandler.prepend(ConnectionHandler)
+      ActiveRecord::ConnectionAdapters::ConnectionSpecification.prepend(ConnectionSpecification)
     end
 
     def global_config_sequence
@@ -89,15 +88,9 @@ module Shackles
       new_handler = @connection_handlers[environment]
       if !new_handler
         new_handler = @connection_handlers[environment] = ActiveRecord::ConnectionAdapters::ConnectionHandler.new
-        pools = if Rails.version < '3.0'
-                  ActiveRecord::Base.connection_handler.instance_variable_get(:@connection_pools)
-                elsif Rails.version < '4.0'
-                  ActiveRecord::Base.connection_handler.instance_variable_get(:@class_to_pool)
-                else
-                  ActiveRecord::Base.connection_handler.send(:owner_to_pool)
-                end
+        pools = ActiveRecord::Base.connection_handler.send(:owner_to_pool)
         pools.each_pair do |model, pool|
-          model = model.constantize if Rails.version >= '4'
+          model = model.constantize
           new_handler.establish_connection(model, pool.spec)
         end
       end
