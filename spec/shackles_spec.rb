@@ -1,4 +1,5 @@
 require 'active_record'
+require 'byebug'
 require 'rails'
 require 'shackles'
 
@@ -10,9 +11,7 @@ RSpec.configure do |config|
 end
 
 describe Shackles do
-  ConnectionSpecification = Rails.version < '4' ?
-      ActiveRecord::Base::ConnectionSpecification :
-      ActiveRecord::ConnectionAdapters::ConnectionSpecification
+  ConnectionSpecification = ActiveRecord::ConnectionAdapters::ConnectionSpecification
 
   it "should allow changing environments" do
     conf = {

@@ -17,7 +17,13 @@ Gem::Specification.new do |s|
   s.files = Dir["lib/**/*"] + ["LICENSE", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
-  s.add_dependency "activerecord", ">= 3.2", "< 4.3"
+  s.required_ruby_version = '>= 2.0'
+
+  s.add_dependency "activerecord", ">= 4.0", "< 5.1"
+
+  s.add_development_dependency "appraisal"
+  s.add_development_dependency "byebug"
   s.add_development_dependency "mocha"
+  s.add_development_dependency "rspec", "~> 2.0"
   s.add_development_dependency "sqlite3"
 end

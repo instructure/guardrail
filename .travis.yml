@@ -1,12 +1,21 @@
 language: ruby
 
 rvm:
-  - "1.9.3"
-  - "2.1.2"
+  - 2.1.7
+  - 2.2.3
+  - 2.3.0
 
-env:
-  - RAILS=3
-  - RAILS=4.0
-  - RAILS=4.1
+gemfile:
+  - gemfiles/activerecord_4.0.gemfile
+  - gemfiles/activerecord_4.1.gemfile
+  - gemfiles/activerecord_4.2.gemfile
+  - gemfiles/activerecord_5.0.gemfile
+
+matrix:
+  exclude:
+    - rvm: 2.1.7
+      gemfile: gemfiles/activerecord_5.0.gemfile
 
 script: bundle exec rspec spec
+
+sudo: false
