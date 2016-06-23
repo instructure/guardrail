@@ -87,6 +87,20 @@ describe Shackles do
     expect(spec.config[:username]).to eq('canvas')
   end
 
+  it "does not share config objects when dup'ing specs" do
+    conf = {
+        :adapter => 'postgresql',
+        :database => 'master',
+        :username => '%{schema_search_path}',
+        :schema_search_path => 'canvas',
+        :deploy => {
+            :username => 'deploy'
+        }
+    }
+    spec = ConnectionSpecification.new(conf.dup, 'adapter')
+    expect(spec.config.object_id).not_to eq spec.dup.config.object_id
+  end
+
   describe "activate" do
     before do
       #!!! trick it in to actually switching envs
@@ -133,6 +147,16 @@ describe Shackles do
         Shackles.activate(:slave) do
           expect(ActiveRecord::Base.connection_pool).not_to be_connected
         end
+      end
+    end
+
+    it 'is thread safe' do
+      Shackles.activate(:slave) do
+        Thread.new do
+          Shackles.activate!(:deploy)
+          expect(Shackles.environment).to eq :deploy
+        end.join
+        expect(Shackles.environment).to eq :slave
       end
     end
   end

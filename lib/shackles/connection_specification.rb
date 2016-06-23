@@ -35,6 +35,11 @@ module Shackles
       super(config.deep_symbolize_keys, adapter_method)
     end
 
+    def initialize_dup(original)
+      @current_config = nil
+      super
+    end
+
     def config
       @current_config = nil if Shackles.environment != @current_config_environment || Shackles.global_config_sequence != @current_config_sequence
       return @current_config if @current_config

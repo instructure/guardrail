@@ -3,7 +3,7 @@ require 'set'
 module Shackles
   class << self
     def environment
-      @environment ||= :master
+      Thread.current[:shackles_environment] ||= :master
     end
 
     def global_config
@@ -63,7 +63,7 @@ module Shackles
         activated_environments << environment
         yield
       ensure
-        @environment = old_environment
+        Thread.current[:shackles_environment] = old_environment
         ActiveRecord::Base.connection_handler = ensure_handler unless Rails.env.test?
       end
     end
@@ -73,7 +73,7 @@ module Shackles
       environment ||= :master
       save_handler
       old_environment = self.environment
-      @environment = environment
+      Thread.current[:shackles_environment] = environment
       ActiveRecord::Base.connection_handler = ensure_handler unless Rails.env.test?
       old_environment
     end
