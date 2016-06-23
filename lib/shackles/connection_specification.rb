@@ -31,8 +31,14 @@ module Shackles
       end
     end
 
-    def initialize(config, adapter_method)
-      super(config.deep_symbolize_keys, adapter_method)
+    if Rails.version < '5'
+      def initialize(config, adapter_method)
+        super(config.deep_symbolize_keys, adapter_method)
+      end
+    else
+      def initialize(name, config, adapter_method)
+        super(name, config.deep_symbolize_keys, adapter_method)
+      end
     end
 
     def initialize_dup(original)

@@ -14,6 +14,6 @@ appraise "activerecord-4.2" do
 end
 
 appraise "activerecord-5.0" do
-  gem 'activerecord', '>= 5.0.0.beta2', '< 5.1'
-  gem 'railties', '>= 5.0.0.beta2', '< 5.1'
+  gem 'activerecord', '>= 5.0.0.rc2', '< 5.1'
+  gem 'railties', '>= 5.0.0.rc2', '< 5.1'
 end

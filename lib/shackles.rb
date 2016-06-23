@@ -90,8 +90,12 @@ module Shackles
         new_handler = @connection_handlers[environment] = ActiveRecord::ConnectionAdapters::ConnectionHandler.new
         pools = ActiveRecord::Base.connection_handler.send(:owner_to_pool)
         pools.each_pair do |model, pool|
-          model = model.constantize
-          new_handler.establish_connection(model, pool.spec)
+          if Rails.version < '5'
+            model = model.constantize
+            new_handler.establish_connection(model, pool.spec)
+          else
+            new_handler.establish_connection(pool.spec)
+          end
         end
       end
       new_handler
