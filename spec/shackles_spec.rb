@@ -26,20 +26,20 @@ describe Shackles do
         }
     }
     spec = ConnectionSpecification.new(conf, 'adapter')
-    spec.config[:username].should == 'canvas'
-    spec.config[:database].should == 'master'
+    expect(spec.config[:username]).to eq('canvas')
+    expect(spec.config[:database]).to eq('master')
     Shackles.activate(:deploy) do
-      spec.config[:username].should == 'deploy'
-      spec.config[:database].should == 'master'
+      expect(spec.config[:username]).to eq('deploy')
+      expect(spec.config[:database]).to eq('master')
     end
-    spec.config[:username].should == 'canvas'
-    spec.config[:database].should == 'master'
+    expect(spec.config[:username]).to eq('canvas')
+    expect(spec.config[:database]).to eq('master')
     Shackles.activate(:slave) do
-      spec.config[:username].should == 'canvas'
-      spec.config[:database].should == 'slave'
+      expect(spec.config[:username]).to eq('canvas')
+      expect(spec.config[:database]).to eq('slave')
     end
-    spec.config[:username].should == 'canvas'
-    spec.config[:database].should == 'master'
+    expect(spec.config[:username]).to eq('canvas')
+    expect(spec.config[:database]).to eq('master')
   end
 
   it "should allow using hash insertions" do
@@ -53,11 +53,11 @@ describe Shackles do
         }
     }
     spec = ConnectionSpecification.new(conf, 'adapter')
-    spec.config[:username].should == 'canvas'
+    expect(spec.config[:username]).to eq('canvas')
     Shackles.activate(:deploy) do
-      spec.config[:username].should == 'deploy'
+      expect(spec.config[:username]).to eq('deploy')
     end
-    spec.config[:username].should == 'canvas'
+    expect(spec.config[:username]).to eq('canvas')
   end
 
   it "should be cache coherent with modifying the config" do
@@ -71,20 +71,20 @@ describe Shackles do
         }
     }
     spec = ConnectionSpecification.new(conf.dup, 'adapter')
-    spec.config[:username].should == 'canvas'
+    expect(spec.config[:username]).to eq('canvas')
     spec.config[:schema_search_path] = 'bob'
-    spec.config[:schema_search_path].should == 'bob'
-    spec.config[:username].should == 'bob'
+    expect(spec.config[:schema_search_path]).to eq('bob')
+    expect(spec.config[:username]).to eq('bob')
     Shackles.activate(:deploy) do
-      spec.config[:schema_search_path].should == 'bob'
-      spec.config[:username].should == 'deploy'
+      expect(spec.config[:schema_search_path]).to eq('bob')
+      expect(spec.config[:username]).to eq('deploy')
     end
     external_config = spec.config.dup
-    external_config.class.should == Hash
-    external_config.should == spec.config
+    expect(external_config.class).to eq(Hash)
+    expect(external_config).to eq(spec.config)
 
     spec.config = conf.dup
-    spec.config[:username].should == 'canvas'
+    expect(spec.config[:username]).to eq('canvas')
   end
 
   describe "activate" do
@@ -107,31 +107,31 @@ describe Shackles do
     it "should not close connections when switching envs" do
       conn = ActiveRecord::Base.connection
       slave_conn = Shackles.activate(:slave) { ActiveRecord::Base.connection }
-      conn.should_not == slave_conn
-      ActiveRecord::Base.connection.should == conn
+      expect(conn).not_to eq(slave_conn)
+      expect(ActiveRecord::Base.connection).to eq(conn)
     end
 
     it "should track all activated environments" do
       Shackles.activate(:slave) {}
       Shackles.activate(:custom) {}
       expected = Set.new([:master, :slave, :custom])
-      (Shackles.activated_environments & expected).should == expected
+      expect(Shackles.activated_environments & expected).to eq(expected)
     end
 
     context "non-transactional" do
       it "should really disconnect all envs" do
         ActiveRecord::Base.connection
-        ActiveRecord::Base.connection_pool.should be_connected
+        expect(ActiveRecord::Base.connection_pool).to be_connected
 
         Shackles.activate(:slave) do
           ActiveRecord::Base.connection
-          ActiveRecord::Base.connection_pool.should be_connected
+          expect(ActiveRecord::Base.connection_pool).to be_connected
         end
 
         ActiveRecord::Base.clear_all_connections!
-        ActiveRecord::Base.connection_pool.should_not be_connected
+        expect(ActiveRecord::Base.connection_pool).not_to be_connected
         Shackles.activate(:slave) do
-          ActiveRecord::Base.connection_pool.should_not be_connected
+          expect(ActiveRecord::Base.connection_pool).not_to be_connected
         end
       end
     end
