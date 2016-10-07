@@ -13,6 +13,10 @@ end
 describe Shackles do
   ConnectionSpecification = ActiveRecord::ConnectionAdapters::ConnectionSpecification
 
+  def spec_args(conf, adapter)
+    Rails.version < '5' ? [conf, adapter] : ['dummy', conf, adapter]
+  end
+
   it "should allow changing environments" do
     conf = {
         :adapter => 'postgresql',
@@ -25,7 +29,7 @@ describe Shackles do
             :database => 'slave'
         }
     }
-    spec = ConnectionSpecification.new(conf, 'adapter')
+    spec = ConnectionSpecification.new(*spec_args(conf, 'adapter'))
     expect(spec.config[:username]).to eq('canvas')
     expect(spec.config[:database]).to eq('master')
     Shackles.activate(:deploy) do
@@ -52,7 +56,7 @@ describe Shackles do
             :username => 'deploy'
         }
     }
-    spec = ConnectionSpecification.new(conf, 'adapter')
+    spec = ConnectionSpecification.new(*spec_args(conf, 'adapter'))
     expect(spec.config[:username]).to eq('canvas')
     Shackles.activate(:deploy) do
       expect(spec.config[:username]).to eq('deploy')
@@ -70,7 +74,7 @@ describe Shackles do
             :username => 'deploy'
         }
     }
-    spec = ConnectionSpecification.new(conf.dup, 'adapter')
+    spec = ConnectionSpecification.new(*spec_args(conf.dup, 'adapter'))
     expect(spec.config[:username]).to eq('canvas')
     spec.config[:schema_search_path] = 'bob'
     expect(spec.config[:schema_search_path]).to eq('bob')
@@ -85,6 +89,20 @@ describe Shackles do
 
     spec.config = conf.dup
     expect(spec.config[:username]).to eq('canvas')
+  end
+
+  it "does not share config objects when dup'ing specs" do
+    conf = {
+        :adapter => 'postgresql',
+        :database => 'master',
+        :username => '%{schema_search_path}',
+        :schema_search_path => 'canvas',
+        :deploy => {
+            :username => 'deploy'
+        }
+    }
+    spec = ConnectionSpecification.new(*spec_args(conf.dup, 'adapter'))
+    expect(spec.config.object_id).not_to eq spec.dup.config.object_id
   end
 
   describe "activate" do
@@ -133,6 +151,16 @@ describe Shackles do
         Shackles.activate(:slave) do
           expect(ActiveRecord::Base.connection_pool).not_to be_connected
         end
+      end
+    end
+
+    it 'is thread safe' do
+      Shackles.activate(:slave) do
+        Thread.new do
+          Shackles.activate!(:deploy)
+          expect(Shackles.environment).to eq :deploy
+        end.join
+        expect(Shackles.environment).to eq :slave
       end
     end
   end

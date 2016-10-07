@@ -2,8 +2,8 @@
 
 source "https://rubygems.org/"
 
-gem "activerecord", ">= 5.0.0.beta2", "< 5.1"
-gem "railties", ">= 5.0.0.beta2", "< 5.1"
+gem "activerecord", ">= 5.0.0.rc2", "< 5.1"
+gem "railties", ">= 5.0.0.rc2", "< 5.1"
 
 group :development do
   gem "mocha", :require => false
