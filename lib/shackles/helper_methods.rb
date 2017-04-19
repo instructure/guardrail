@@ -1,7 +1,9 @@
 module Shackles
   module HelperMethods
     def self.included(base)
-      base.extend(ClassMethods)
+      base.singleton_class.include(ClassMethods)
+      # call shackle_class_method on the class itself, which then calls shackle_method on the singleton_class
+      base.singleton_class.singleton_class.include(ClassMethods)
     end
 
     # see readme for example usage
