@@ -92,7 +92,8 @@ module Shackles
         pools.each_pair do |model, pool|
           if Rails.version < '5'
             model = model.constantize
-            new_handler.establish_connection(model, pool.spec)
+            pool_spec = pool.try(:spec) || model.connection_pool.spec
+            new_handler.establish_connection(model, pool_spec)
           elsif Rails.version < '5.1'
             new_handler.establish_connection(pool.spec)
           else
