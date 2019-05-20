@@ -64,7 +64,7 @@ module Shackles
         yield
       ensure
         Thread.current[:shackles_environment] = old_environment
-        ActiveRecord::Base.connection_handler = ensure_handler unless Rails.env.test?
+        ActiveRecord::Base.connection_handler = ensure_handler unless test?
       end
     end
 
@@ -74,11 +74,16 @@ module Shackles
       save_handler
       old_environment = self.environment
       Thread.current[:shackles_environment] = environment
-      ActiveRecord::Base.connection_handler = ensure_handler unless Rails.env.test?
+      ActiveRecord::Base.connection_handler = ensure_handler unless test?
       old_environment
     end
 
     private
+
+    def test?
+      Rails.env.test?
+    end
+
     def save_handler
       @connection_handlers ||= {}
       @connection_handlers[environment] ||= ActiveRecord::Base.connection_handler
