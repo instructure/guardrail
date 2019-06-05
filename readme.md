@@ -8,7 +8,8 @@ ActiveRecord, allowing least-privilege best practices.
 
 ## Installation
 
-Add `gem 'shackles'` to your Gemfile (tested with Rails 2.3 and 3.2)
+Add `gem 'shackles'` to your Gemfile (tested with Rails 4.x and 5.x, and also
+with the release candidate for Rails 6.0)
 
 ## Usage
 
