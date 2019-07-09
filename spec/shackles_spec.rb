@@ -4,7 +4,6 @@ require 'rails'
 require 'shackles'
 
 # we're not actually bringing up ActiveRecord, so we need to initialize our stuff
-Shackles.primary_environment_name = :primary
 Shackles.initialize!
 
 RSpec.configure do |config|
