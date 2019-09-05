@@ -2,8 +2,11 @@ require 'set'
 
 module Shackles
   class << self
+    attr_accessor :primary_environment_name
+    Shackles.primary_environment_name = :primary
+
     def environment
-      Thread.current[:shackles_environment] ||= :master
+      Thread.current[:shackles_environment] ||= primary_environment_name
     end
 
     def global_config
@@ -56,7 +59,7 @@ module Shackles
     # switch environment for the duration of the block
     # will keep the old connections around
     def activate(environment)
-      environment ||= :master
+      environment ||= primary_environment_name
       return yield if environment == self.environment
       begin
         old_environment = activate!(environment)
@@ -70,7 +73,7 @@ module Shackles
 
     # for use from script/console ONLY
     def activate!(environment)
-      environment ||= :master
+      environment ||= primary_environment_name
       save_handler
       old_environment = self.environment
       Thread.current[:shackles_environment] = environment

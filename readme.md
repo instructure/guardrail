@@ -13,9 +13,9 @@ with the release candidate for Rails 6.0)
 
 ## Usage
 
-There are two major use cases for shackles. The first is for master/slave(/deploy) environments.
-Using a slave is as simple as adding a slave block (underneath your main environment block) in
-database.yml, then wrapping stuff you want to query the slave in Shackles.activate(:slave) blocks.
+There are two major use cases for shackles. The first is for primary/replica(/deploy) environments.
+Using a replica is as simple as adding a replica block (underneath your main environment block) in
+database.yml, then wrapping stuff you want to query the replica in Shackles.activate(:replica) blocks.
 You can extend this to a deploy environment so that migrations will run as a deploy user that
 permission to modify schema, while your normal app runs with lower privileges that cannot modify
 schema. This is defense-in-depth in practice, so that *if* you happen to have a SQL injection
@@ -23,7 +23,7 @@ bug, it would be impossible to do something like dropping tables.
 
 The other major use case is more defense-in-depth. By carefully setting up your environment, you
 can default to script/console sessions for regular users to use their own database user, and the
-slave.
+replica.
 
 Example database.yml file:
 
@@ -32,9 +32,9 @@ production:
   adapter: postgresql
   username: myapp
   database: myapp
-  host: db-master
-  slave:
-    host: db-slave
+  host: db-primary
+  replica:
+    host: db-replica
   deploy:
     username: deploy
 ```
@@ -61,16 +61,16 @@ class SomeModel
   def expensive_read_only
     ...
   end
-  shackle_method :expensive_read_only, environment: :slave
+  shackle_method :expensive_read_only, environment: :replica
 
   def self.class_level_expensive_read_only
     ...
   end
-  shackle_class_method :class_level_expensive_read_only, environment: :slave
+  shackle_class_method :class_level_expensive_read_only, environment: :replica
 
   # helpers for multiple methods are also available
 
-  shackle_methods :instance_method_foo, :instance_method_bar, environment: :slave
-  shackle_class_methods :class_method_foo, :class_method_bar, environment: :slave
+  shackle_methods :instance_method_foo, :instance_method_bar, environment: :replica
+  shackle_class_methods :class_method_foo, :class_method_bar, environment: :replica
 end
 ```

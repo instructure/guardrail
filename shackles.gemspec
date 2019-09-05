@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Cody Cutrer"]
   s.email       = "cody@instructure.com"
   s.homepage    = "http://github.com/instructure/shackles"
-  s.summary     = "ActiveRecord database environment switching for slaves and least-privilege"
+  s.summary     = "ActiveRecord database environment switching for secondaries and least-privilege"
   s.description = "Allows multiple environments in database.yml, and dynamically switching them."
   s.license     = "MIT"
 
