@@ -14,7 +14,7 @@ describe Shackles do
   ConnectionSpecification = ActiveRecord::ConnectionAdapters::ConnectionSpecification
 
   def spec_args(conf, adapter)
-    Rails.version < '5' ? [conf, adapter] : ['dummy', conf, adapter]
+    ['dummy', conf, adapter]
   end
 
   it "should allow changing environments" do
