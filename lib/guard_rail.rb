@@ -1,12 +1,12 @@
 require 'set'
 
-module Shackles
+module GuardRail
   class << self
     attr_accessor :primary_environment_name
-    Shackles.primary_environment_name = :primary
+    GuardRail.primary_environment_name = :primary
 
     def environment
-      Thread.current[:shackles_environment] ||= primary_environment_name
+      Thread.current[:guard_rail_environment] ||= primary_environment_name
     end
 
     def global_config
@@ -19,11 +19,11 @@ module Shackles
 
     # semi-private
     def initialize!
-      require 'shackles/connection_handler'
-      require 'shackles/connection_specification'
-      require 'shackles/helper_methods'
+      require 'guard_rail/connection_handler'
+      require 'guard_rail/connection_specification'
+      require 'guard_rail/helper_methods'
 
-      activated_environments << Shackles.environment
+      activated_environments << GuardRail.environment
 
       ActiveRecord::ConnectionAdapters::ConnectionHandler.prepend(ConnectionHandler)
       ActiveRecord::ConnectionAdapters::ConnectionSpecification.prepend(ConnectionSpecification)
@@ -66,7 +66,7 @@ module Shackles
         activated_environments << environment
         yield
       ensure
-        Thread.current[:shackles_environment] = old_environment
+        Thread.current[:guard_rail_environment] = old_environment
         ActiveRecord::Base.connection_handler = ensure_handler unless test?
       end
     end
@@ -76,7 +76,7 @@ module Shackles
       environment ||= primary_environment_name
       save_handler
       old_environment = self.environment
-      Thread.current[:shackles_environment] = environment
+      Thread.current[:guard_rail_environment] = environment
       ActiveRecord::Base.connection_handler = ensure_handler unless test?
       old_environment
     end
@@ -107,8 +107,8 @@ module Shackles
 end
 
 if defined?(Rails::Railtie)
-  require "shackles/railtie"
+  require "guard_rail/railtie"
 else
   # just load everything immediately for Rails 2
-  Shackles.initialize!
+  GuardRail.initialize!
 end

@@ -1,6 +1,6 @@
 require 'i18n/core_ext/hash' unless Hash.method_defined?(:deep_symbolize_keys)
 
-module Shackles
+module GuardRail
   module ConnectionSpecification
     class CacheCoherentHash < Hash
       def initialize(spec)
@@ -41,14 +41,14 @@ module Shackles
     end
 
     def config
-      @current_config = nil if Shackles.environment != @current_config_environment || Shackles.global_config_sequence != @current_config_sequence
+      @current_config = nil if GuardRail.environment != @current_config_environment || GuardRail.global_config_sequence != @current_config_sequence
       return @current_config if @current_config
 
-      @current_config_environment = Shackles.environment
-      @current_config_sequence = Shackles.global_config_sequence
+      @current_config_environment = GuardRail.environment
+      @current_config_sequence = GuardRail.global_config_sequence
       config = @config.dup
-      if @config.has_key?(Shackles.environment)
-        env_config = @config[Shackles.environment]
+      if @config.has_key?(GuardRail.environment)
+        env_config = @config[GuardRail.environment]
         # an array of databases for this environment; for now, just choose the first non-nil element
         if env_config.is_a?(Array)
           env_config = env_config.detect { |individual_config| !individual_config.nil? }
@@ -61,7 +61,7 @@ module Shackles
         config[key] = config[key] % config
       end
 
-      config.merge!(Shackles.global_config)
+      config.merge!(GuardRail.global_config)
 
       @current_config = CacheCoherentHash.new(self)
       @current_config.replace(config)

@@ -1,16 +1,16 @@
 require 'active_record'
 require 'byebug'
 require 'rails'
-require 'shackles'
+require 'guard_rail'
 
 # we're not actually bringing up ActiveRecord, so we need to initialize our stuff
-Shackles.initialize!
+GuardRail.initialize!
 
 RSpec.configure do |config|
   config.mock_framework = :mocha
 end
 
-describe Shackles do
+describe GuardRail do
   ConnectionSpecification = ActiveRecord::ConnectionAdapters::ConnectionSpecification
 
   def spec_args(conf, adapter)
@@ -32,13 +32,13 @@ describe Shackles do
     spec = ConnectionSpecification.new(*spec_args(conf, 'adapter'))
     expect(spec.config[:username]).to eq('canvas')
     expect(spec.config[:database]).to eq('primary')
-    Shackles.activate(:deploy) do
+    GuardRail.activate(:deploy) do
       expect(spec.config[:username]).to eq('deploy')
       expect(spec.config[:database]).to eq('primary')
     end
     expect(spec.config[:username]).to eq('canvas')
     expect(spec.config[:database]).to eq('primary')
-    Shackles.activate(:replica) do
+    GuardRail.activate(:replica) do
       expect(spec.config[:username]).to eq('canvas')
       expect(spec.config[:database]).to eq('replica')
     end
@@ -58,7 +58,7 @@ describe Shackles do
     }
     spec = ConnectionSpecification.new(*spec_args(conf, 'adapter'))
     expect(spec.config[:username]).to eq('canvas')
-    Shackles.activate(:deploy) do
+    GuardRail.activate(:deploy) do
       expect(spec.config[:username]).to eq('deploy')
     end
     expect(spec.config[:username]).to eq('canvas')
@@ -79,7 +79,7 @@ describe Shackles do
     spec.config[:schema_search_path] = 'bob'
     expect(spec.config[:schema_search_path]).to eq('bob')
     expect(spec.config[:username]).to eq('bob')
-    Shackles.activate(:deploy) do
+    GuardRail.activate(:deploy) do
       expect(spec.config[:schema_search_path]).to eq('bob')
       expect(spec.config[:username]).to eq('deploy')
     end
@@ -111,29 +111,29 @@ describe Shackles do
       Rails.env.stubs(:test?).returns(false)
 
       # be sure to test bugs where the current env isn't yet included in this hash
-      Shackles.connection_handlers.clear
+      GuardRail.connection_handlers.clear
 
       ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
     end
 
     it "should call ensure_handler when switching envs" do
       old_handler = ActiveRecord::Base.connection_handler
-      Shackles.expects(:ensure_handler).returns(old_handler).twice
-      Shackles.activate(:replica) {}
+      GuardRail.expects(:ensure_handler).returns(old_handler).twice
+      GuardRail.activate(:replica) {}
     end
 
     it "should not close connections when switching envs" do
       conn = ActiveRecord::Base.connection
-      replica_conn = Shackles.activate(:replica) { ActiveRecord::Base.connection }
+      replica_conn = GuardRail.activate(:replica) { ActiveRecord::Base.connection }
       expect(conn).not_to eq(replica_conn)
       expect(ActiveRecord::Base.connection).to eq(conn)
     end
 
     it "should track all activated environments" do
-      Shackles.activate(:replica) {}
-      Shackles.activate(:custom) {}
+      GuardRail.activate(:replica) {}
+      GuardRail.activate(:custom) {}
       expected = Set.new([:primary, :replica, :custom])
-      expect(Shackles.activated_environments & expected).to eq(expected)
+      expect(GuardRail.activated_environments & expected).to eq(expected)
     end
 
     context "non-transactional" do
@@ -141,26 +141,26 @@ describe Shackles do
         ActiveRecord::Base.connection
         expect(ActiveRecord::Base.connection_pool).to be_connected
 
-        Shackles.activate(:replica) do
+        GuardRail.activate(:replica) do
           ActiveRecord::Base.connection
           expect(ActiveRecord::Base.connection_pool).to be_connected
         end
 
         ActiveRecord::Base.clear_all_connections!
         expect(ActiveRecord::Base.connection_pool).not_to be_connected
-        Shackles.activate(:replica) do
+        GuardRail.activate(:replica) do
           expect(ActiveRecord::Base.connection_pool).not_to be_connected
         end
       end
     end
 
     it 'is thread safe' do
-      Shackles.activate(:replica) do
+      GuardRail.activate(:replica) do
         Thread.new do
-          Shackles.activate!(:deploy)
-          expect(Shackles.environment).to eq :deploy
+          GuardRail.activate!(:deploy)
+          expect(GuardRail.environment).to eq :deploy
         end.join
-        expect(Shackles.environment).to eq :replica
+        expect(GuardRail.environment).to eq :replica
       end
     end
   end
