@@ -1,15 +1,15 @@
 $:.push File.expand_path("../lib", __FILE__)
 
 # Maintain your gem's version:
-require "shackles/version"
+require "guard_rail/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "shackles"
-  s.version     = Shackles::VERSION
+  s.name        = "guardrail"
+  s.version     = GuardRail::VERSION
   s.authors     = ["Cody Cutrer"]
   s.email       = "cody@instructure.com"
-  s.homepage    = "http://github.com/instructure/shackles"
+  s.homepage    = "http://github.com/instructure/guardrail"
   s.summary     = "ActiveRecord database environment switching for secondaries and least-privilege"
   s.description = "Allows multiple environments in database.yml, and dynamically switching them."
   s.license     = "MIT"
