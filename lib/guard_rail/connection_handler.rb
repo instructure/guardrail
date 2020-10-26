@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GuardRail
   module ConnectionHandler
     %w{clear_active_connections clear_reloadable_connections

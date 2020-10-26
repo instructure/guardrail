@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GuardRail
   module HelperMethods
     def self.included(base)
