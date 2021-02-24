@@ -19,12 +19,9 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 2.5'
 
-  s.add_dependency "activerecord", ">= 5.1", "< 6.1"
-  s.add_dependency "railties", ">= 5.1", "< 6.1"
+  s.add_dependency "activerecord", ">= 6.1", "< 6.2"
+  s.add_dependency "railties", ">= 6.1", "< 6.2"
 
   s.add_development_dependency "appraisal"
   s.add_development_dependency "byebug"
-  s.add_development_dependency "mocha"
-  s.add_development_dependency "rspec", "~> 3.0"
-  s.add_development_dependency "sqlite3"
 end
