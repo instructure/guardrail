@@ -1,3 +1,2 @@
 /.byebug_history
-/gemfiles/*.lock
-/Gemfile.lock
+/*.gem
