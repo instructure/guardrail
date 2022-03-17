@@ -1,5 +1,5 @@
 PATH
-  remote: .
+  remote: ..
   specs:
     guardrail (3.0.1)
       activerecord (>= 6.1, < 7.1)
@@ -31,7 +31,7 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    appraisal (2.3.0)
+    appraisal (2.4.1)
       bundler
       rake
       thor (>= 0.14.0)
@@ -66,18 +66,22 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rake (13.0.6)
-    thor (1.1.0)
+    sqlite3 (1.4.2)
+    thor (1.2.1)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     zeitwerk (2.5.4)
 
 PLATFORMS
-  ruby
+  x86_64-darwin-19
 
 DEPENDENCIES
+  activerecord (>= 7.0, < 7.1)
   appraisal
   byebug
   guardrail!
+  railties (>= 7.0, < 7.1)
+  sqlite3 (~> 1.4)
 
 BUNDLED WITH
    2.2.11
