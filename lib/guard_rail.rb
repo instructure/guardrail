@@ -13,7 +13,8 @@ module GuardRail
 
     def activate!(role)
       return if environment == role
-      ActiveRecord::Base.connecting_to(role: role)
+      # Don't reset the shard when changing the role
+      ActiveRecord::Base.connecting_to(role: role, shard: nil)
     end
   end
 end
