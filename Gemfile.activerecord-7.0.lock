@@ -88,8 +88,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord (~> 7.0.0)
   debug
   guardrail!
+  railties (~> 7.0.0)
 
 BUNDLED WITH
    2.4.19
