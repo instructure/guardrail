@@ -38,7 +38,7 @@ class SomeModel
   def self.class_level_expensive_read_only
     ...
   end
-  gaurd_rail_class_method :class_level_expensive_read_only, environment: :replica
+  guard_rail_class_method :class_level_expensive_read_only, environment: :replica
 
   # helpers for multiple methods are also available
 
