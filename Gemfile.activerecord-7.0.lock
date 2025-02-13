@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     guardrail (3.0.3)
-      activerecord (>= 6.1, < 7.2)
-      railties (>= 6.1, < 7.2)
+      activerecord (>= 6.1, < 8.0)
+      railties (>= 6.1, < 8.0)
 
 GEM
   remote: https://rubygems.org/
@@ -41,7 +41,7 @@ GEM
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     io-console (0.6.0)
-    irb (1.8.1)
+    irb (1.11.0)
       rdoc
       reline (>= 0.3.8)
     loofah (2.21.3)
@@ -76,7 +76,7 @@ GEM
     rake (13.0.6)
     rdoc (6.5.0)
       psych (>= 4.0.0)
-    reline (0.3.9)
+    reline (0.6.0)
       io-console (~> 0.5)
     stringio (3.0.8)
     thor (1.2.2)
