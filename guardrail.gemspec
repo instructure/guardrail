@@ -17,10 +17,10 @@ Gem::Specification.new do |s|
   s.files = Dir["lib/**/*"] + ["LICENSE", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
-  s.required_ruby_version = '>= 2.5'
+  s.required_ruby_version = '>= 3.1'
 
-  s.add_dependency "activerecord", ">= 6.1", "< 7.2"
-  s.add_dependency "railties", ">= 6.1", "< 7.2"
+  s.add_dependency "activerecord", ">= 6.1", "< 8.0"
+  s.add_dependency "railties", ">= 6.1", "< 8.0"
 
   s.add_development_dependency "debug"
 end
