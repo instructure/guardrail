@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    guardrail (3.0.4)
+    guardrail (3.1.0)
       activerecord (>= 6.1, < 8.1)
       railties (>= 6.1, < 8.1)
 
