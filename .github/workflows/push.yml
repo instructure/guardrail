@@ -13,9 +13,41 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: [3.2, 3.3, 3.4]
-        lockfile: ['Gemfile.activerecord-6.1.lock', 'Gemfile.activerecord-7.0.lock', 'Gemfile.activerecord-7.1.lock', 'Gemfile.activerecord-7.2.lock', 'Gemfile.lock']
-
+        include:
+          - lockfile: Gemfile.activerecord-6.1.lock
+            ruby-version: 3.2
+          - lockfile: Gemfile.activerecord-7.0.lock
+            ruby-version: 3.2
+          - lockfile: Gemfile.activerecord-7.0.lock
+            ruby-version: 3.3
+          - lockfile: Gemfile.activerecord-7.1.lock
+            ruby-version: 3.2
+          - lockfile: Gemfile.activerecord-7.1.lock
+            ruby-version: 3.3
+          - lockfile: Gemfile.activerecord-7.1.lock
+            ruby-version: 3.4
+          - lockfile: Gemfile.activerecord-7.2.lock
+            ruby-version: 3.2
+          - lockfile: Gemfile.activerecord-7.2.lock
+            ruby-version: 3.3
+          - lockfile: Gemfile.activerecord-7.2.lock
+            ruby-version: 3.4
+          - lockfile: Gemfile.activerecord-8.0.lock
+            ruby-version: 3.2
+          - lockfile: Gemfile.activerecord-8.0.lock
+            ruby-version: 3.3
+          - lockfile: Gemfile.activerecord-8.0.lock
+            ruby-version: 3.4
+          - lockfile: Gemfile.activerecord-8.0.lock
+            ruby-version: "4.0"
+          - lockfile: Gemfile.lock
+            ruby-version: 3.2
+          - lockfile: Gemfile.lock
+            ruby-version: 3.3
+          - lockfile: Gemfile.lock
+            ruby-version: 3.4
+          - lockfile: Gemfile.lock
+            ruby-version: "4.0"
     steps:
       - uses: actions/checkout@v3
       - name: Set up Ruby
